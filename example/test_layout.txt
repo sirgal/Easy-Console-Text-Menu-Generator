@@ -1,0 +1,60 @@
+Hello! Welcome to the test menu.
+{
+Call the first function [ function_1 ]
+Go to the tests:
+There shall be one submenu and one function call.
+	{
+	Submenu:
+	You are going deeper and deeper.
+		{
+		Escaped character test:
+		Here they are.
+		\{
+		\:
+		\[
+		\}
+			{
+				Call the second function [ function_2 ]
+			}
+		Multi-line welcome text there:
+		Line 1.
+		Line 2.
+		Line 3.
+			{
+				Call the third function [ function_3 ]
+				Call the fourth function [ function_4 ]
+				Third function, too [ function_3 ]
+			}
+		Empty menu with no description here:
+			{
+
+			}
+		}
+	Call the function number 5 [ function_5 ]
+	}
+Go to the depths:
+You're at 1st level.
+	{
+	Go deeper:
+	You're at 2nd level.
+		{
+		Go deeper:
+		You're at 3rd level.
+			{
+			We have to go deeper:
+			You're at 4th level.
+				{
+				Go deeper:
+				You're at 5th level.
+					{
+					End of the tunnel:
+					You are the winner. Go back now.
+						{
+
+						}
+					}
+				}
+			}
+		}
+	}
+}
