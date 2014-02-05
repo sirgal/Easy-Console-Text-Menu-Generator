@@ -29,41 +29,45 @@ Usage:
 1) Design layout in a text file.
 
   Each menu, except the main one, starts with a label, ending with a colon
-      This is a label:
-      
+```
+This is a label:
+```
   Menu content is located between curly braces. Each brace on its own line.
-      This is a label:
+```
+This is a label:
+{
+Submenu:
       {
-        Submenu:
-        {
-        
-        }
-      }
       
+      }
+}
+``` 
   Welcome message is located between the menu label and the starting curly brace.
-      This is a label:
-      Welcome to the menu!
+```
+This is a label:
+Welcome to the menu!
+{
+      Submenu:
+      You have entered the submenu!
       {
-        Submenu:
-        You have entered the submenu!
-        {
-        
-        }
-      }
-  
-  Function names to call are situated in square braces, after the label
-      This is a label:
-      Welcome to the menu!
-      {
-        Submenu:
-        You have entered the submenu!
-        {
-            Call function 0 [ func0 ]
-            Call function 1 [ func1 ]
-            Call function 2 [ func2 ]
-        }
-      }
       
+      }
+}
+```
+  Function names to call are situated in square braces, after the label
+```
+This is a label:
+Welcome to the menu!
+{
+      Submenu:
+      You have entered the submenu!
+      {
+          Call function 0 [ func0 ]
+          Call function 1 [ func1 ]
+          Call function 2 [ func2 ]
+      }
+}
+```
   To use special characters such as : { } [ ] in a label or message, escape it with \ character
   Handlers should take no arguments and return no value: void handler() {}
 
@@ -87,6 +91,7 @@ Usage:
   To free all the allocated memory, use MENU_deallocate
   
   Usage example:
+```C
   #include "menu_utils.h"
   #include "my_menu.h"
 
@@ -97,4 +102,4 @@ Usage:
   	MENU_deallocate( menu );
   	return 0;
   }
-  
+```
