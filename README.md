@@ -113,7 +113,7 @@ Welcome to the menu!
   }
 ```
 
-######5) Known issues
+###__Known issues__
 
   MSVC C compiler does not conform to the C99 standard and is unable to build the example project. Change main.c extension to .cpp to treat it as a C++ file and building will succeed.
 
