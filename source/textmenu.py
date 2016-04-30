@@ -1,26 +1,16 @@
 import re
 import sys
 
-header_name = "menu_utils.h"
-menu_type = "MENU_menu_type"
-entry_type = "MENU_menu_entry_type"
-back_handler = "MENU_backHandler"
-exit_handler = "MENU_exitHandler"
-end_handler = "MENU_endHandler"
-handle_def = "MENU_handler"
+header_name = "ectmg_utils.h"
+menu_type = "ECTMG_menu_t"
+entry_type = "ECTMG_menu_entry_t"
+back_handler = "ECTMG_backHandler"
+exit_handler = "ECTMG_exitHandler"
+end_handler = "ECTMG_endHandler"
+handle_def = "ECTMG_handler"
+STRING_C_TYPE = "char*"
 
 ignore_escaped = "(?<!\\\)"
-
-
-def malloc_string(data_type, variable_name, number, initialization=False):
-    output = data_type \
-             + " *" + variable_name + " = (" + data_type + "*) " \
-             + "malloc( sizeof(" + data_type + ") * " + str(number) + " );\n"
-
-    if initialization:
-        return output
-    else:
-        return output[output.find(" ") + 2::]
 
 
 def indent_text(text):
@@ -99,6 +89,10 @@ if __name__ == "__main__":
     output_filename = sys.argv[2]
     menu_name = sys.argv[3]
 
+    name_prefix = "ECTMG_" + menu_name
+    all_entries = name_prefix + "_all_entries"
+    instance = name_prefix + "_instance"
+
     try:
         entry_list = parse_file(input_filename)
     except:
@@ -135,81 +129,92 @@ if __name__ == "__main__":
     # which entry belongs to which menu
     root_menu_indexes = [entry_to_menu[entry[0]] for entry in entry_list]
 
+    # which menu has which entry
+    entries_in_menu = [[i for i, x in enumerate(root_menu_indexes) if x == j] for j in range(len(menu_entries))]
+
+    # stringify for later use
     menu_count = str(len(menu_entries))
     entry_count = str(len(entry_list))
 
     # start generating code
-    output_text = ""
-    output_text += "#include \"" + header_name + "\"\n\n"
-    output_text += "// MACHINE-GENERATED FILE, DO NOT CHANGE\n"
-    output_text += menu_type + "* MENU_initialize_" + menu_name + "() {\n"
+    code = ""
+    code += "#include \"" + header_name + "\"\n\n"
+    code += "// MACHINE-GENERATED FILE, DO NOT CHANGE\n"
 
-    output_text += "const int menu_sizes[" + menu_count + "] = " \
-                   + "{" + str([menu for menu in menu_lengths])[1:-1] + "};\n"
-    output_text += "int entry_counters[" + menu_count + "] = " \
-                   + "{" + "0, " * (int(menu_count) - 1) + "0 };\n"
-    output_text += "const int string_lengths[" + menu_count + "] = " \
-                   + "{" + str([len(string) + 1 for string in welcome_strings])[1:-1] + "};\n"
+    # static menu and menu entry instances
+    code += menu_type + " " + instance + "[" + menu_count + "];\n"
+    code += entry_type + " " + all_entries + "[" + entry_count + "];\n\n"
 
-    output_text += "const int entry_name_lengths[" + entry_count + "] = " \
-                   + "{" + str([len(string) + 1 for string in entry_names])[1:-1] + "};\n"
+    # strings
+    static_strings = [("welcome", welcome_strings), ("entry", entry_names)]
+    string_names = lambda name, i: name_prefix + "_" + name + "_string_" + str(i)
 
-    output_text += "const " + handle_def + " handlers[" + str(len(handler_list)) + "] = " \
-                   + "{" + str([string for string in handler_list])[1:-1].replace("'", "") + "};\n"
-    output_text += "const int root_menu_ptrs[" + str(len(handler_list)) + "] = " \
-                   + "{" + str([idx for idx in root_menu_indexes])[1:-1] + "};\n\n"
+    for string_type, strings in static_strings:
+        for i, string in enumerate(strings):
+            string = string.replace("\n", "\\n") 
+            code += STRING_C_TYPE + " " + string_names(string_type, i) + " = \"" + string + "\";\n"
 
-    output_text += "int menu_ptr = 1;\n\n"
+        code += "\n"
 
-    output_text += malloc_string(menu_type, "menu", len(menu_lengths), True)
-    output_text += malloc_string(entry_type, "entries", len(entry_list), True)
+        code += STRING_C_TYPE + " " + name_prefix + "_" + string_type + "_strings[] = {\n"
+        code += ",\n".join([string_names(string_type, i) for i in range(len(strings))])
+        code += "\n};\n\n"
 
-    output_text += "\n"
+    # menus and their entries
+    entry_names = lambda i: name_prefix + "_entry_" + str(i)
+    for i, entries in enumerate(entries_in_menu):
+        entries = list(map(lambda x: "&" + all_entries + "[" + str(x) + "]", entries))
+        entries += ["NULL"]
+        code += entry_type + "* " + entry_names(i) + "[" + str(menu_lengths[i] + 1)
+        code += "] = {" + ", ".join(entries) + "};\n"
 
-    output_text += "for( int i = 0; i < " + menu_count + "; i++ ) {\n"
-    output_text += malloc_string(entry_type + "*", "menu[i].entries", 0, False).replace("0", "(menu_sizes[i] + 1)")
-    output_text += malloc_string("char", "menu[i].welcome_string", 0).replace("0", "string_lengths[i]")
-    output_text += "menu[i].entries[menu_sizes[i]] = NULL;\n"
-    output_text += "}\n\n"
+    code += "\n"
+    code += entry_type + "** " + name_prefix + "_menu_entries[] = {\n"
+    code += ",\n".join([entry_names(i) for i in range(len(menu_entries))])
+    code += "\n};\n\n"
 
-    for i, string in enumerate(welcome_strings):
-        output_text += "memcpy( menu[" + str(i) + "].welcome_string, " + \
-                       "\"" + string.replace("\n", "\\n") + "\", " \
-                       + "string_lengths[" + str(i) + "] );\n"
+    # initialization function
+    code += menu_type + "* ECTMG_initialize_" + menu_name + "() {\n"
 
-    output_text += "\n"
+    # handler functions
+    code += "const " + handle_def + " handlers[" + str(len(handler_list)) + "] = "
+    code += "{" + str([string for string in handler_list])[1:-1].replace("'", "") + "};\n"
+    # root menu pointers
+    code += "const int root_menu_ptrs[" + str(len(handler_list)) + "] = "
+    code += "{" + str([idx for idx in root_menu_indexes])[1:-1] + "};\n\n"
+    # submenu counter
+    code += "int menu_ptr = 1;\n\n"
 
-    output_text += "for( int i = 0; i < " + entry_count + "; i++ ) {\n"
-    output_text += malloc_string("char", "entries[i].string", 0).replace("0", "entry_name_lengths[i]")
-    output_text += "menu[root_menu_ptrs[i]].entries[entry_counters[root_menu_ptrs[i]]++] = &entries[i];\n"
-    output_text += "if( handlers[i] == NULL ) {\n"
-    output_text += "menu[menu_ptr].prev_menu = &menu[root_menu_ptrs[i]];\n"
-    output_text += "entries[i].next_menu = &menu[menu_ptr++];\n"
-    output_text += "entries[i].handler = NULL;\n"
-    output_text += "}\n"
-    output_text += "else {\n"
-    output_text += "entries[i].next_menu = NULL;\n"
-    output_text += "entries[i].handler = handlers[i];\n"
-    output_text += "}\n"
-    output_text += "}\n\n"
+    # menu instances pointers initialization
+    code += "for( int i = 0; i < " + menu_count + "; i++ ) {\n"
+    code += instance + "[i].entries = " + name_prefix + "_menu_entries[i];\n"
+    code += instance + "[i].welcome_string = " + name_prefix + "_welcome_strings[i];\n"
+    code += "}\n\n"
 
-    for i, string in enumerate(entry_names):
-        output_text += "memcpy( entries[" + str(i) + "].string, " + \
-                       "\"" + string.replace("\n", "\\n") + "\", " \
-                       + "entry_name_lengths[" + str(i) + "] );\n"
+    # menu entries handlers initialization
+    code += "for( int i = 0; i < " + entry_count + "; i++ ) {\n"
+    code += all_entries + "[i].string = " + name_prefix + "_entry_strings[i];\n"
+    code += "if( handlers[i] == NULL ) {\n"
+    code += instance + "[menu_ptr].prev_menu = &" + instance + "[root_menu_ptrs[i]];\n"
+    code += all_entries + "[i].next_menu = &" + instance + "[menu_ptr++];\n"
+    code += all_entries + "[i].handler = NULL;\n"
+    code += "}\n"
+    code += "else {\n"
+    code += all_entries + "[i].next_menu = NULL;\n"
+    code += all_entries + "[i].handler = handlers[i];\n"
+    code += "}\n"
+    code += "}\n\n"
 
-    output_text += "\n"
-    output_text += "menu[0].prev_menu = NULL;\n"
-    output_text += "return &menu[0];\n"
-    output_text += "}"
+    # root setup and return
+    code += instance + "[0].prev_menu = NULL;\n"
+    code += "return &" + instance + "[0];\n"
+    code += "}"
 
-    output_text = indent_text(output_text)
-
-    #print(output_text)
+    code = indent_text(code)
 
     try:
         output_f = open(output_filename, "w")
-        output_f.write(output_text)
+        output_f.write(code)
         output_f.close()
     except:
         print("Unable to open file for writing")

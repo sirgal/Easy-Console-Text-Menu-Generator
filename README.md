@@ -1,17 +1,18 @@
 Easy-Console-Text-Menu-Generator
 ================================
 
-Python script for easy generation of text menus for further use in C programs
+Python script for easy generation of text menus for further use in C programs.
 
 ###__Features:__
 
 - Welcome messages  
 - Nested menus  
 - Handler functions  
-- Written in C89  
+- Written in C99  
 - Extreme ease of use - just write down menu layout, run script, include a few headers and you're set
 - Resource efficiency
-- Will run on anything with printf, scanf and dynamic memory allocation
+- Uses only static memory - easy to move constants to the Flash memory
+- Will run on anything with printf and scanf
 - (With some tinkering - on anything)
 - Do we need more? It's a console menu, after all
 
@@ -91,25 +92,28 @@ Welcome to the menu!
   
 ######3) Include headers.
 
-  First, include the "menu_utils.h" to your project. It contains user functions to run and delete generated menu.
+  First, include the "ectmg_utils.h" into your project. It contains a user function necessary to run the generated menu.
   Then, include all the generated layout headers.  
   
 ######4) Run.
   
-  MENU_initialize_chosenuniquename function, located in a generated function, allocates memory and creates menu of desired layout. Returned value of type MENU_menu_type is the root of your menu.  
-  Pass it to MENU_start and you're done  
-  To free all the allocated memory, use MENU_deallocate  
+  ECTMG_initialize_chosenuniquename function, located in the generated file, initializes the menu and returns its root of type ECTMG_menu_t.  
+  Pass it to ECTMG_start and you're done. 
   
   Usage example:
 ```C
-  #include "menu_utils.h"
+  #include "ectmg_utils.h"
   #include "my_menu.h"
 
   int main()
   {
-  	MENU_menu_type *menu = MENU_initialize_my_menu();
-  	MENU_start( menu );
-  	MENU_deallocate( menu );
+  	ECTMG_menu_t *menu = ECTMG_initialize_my_menu();
+  	ECTMG_start( menu );
   	return 0;
   }
 ```
+
+######5) Known issues
+
+  MSVC C compiler does not conform to the C99 standard and is unable to build the example project. Change main.c extension to .cpp to treat it as a C++ file and building will succeed.
+

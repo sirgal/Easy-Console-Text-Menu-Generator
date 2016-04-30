@@ -1,12 +1,11 @@
 #include <stdio.h>
-#include "menu_utils.h"
+#include "ectmg_utils.h"
 #include "handler_functions.h"
 #include "my_menu.h"
 
 int main()
 {
-	MENU_menu_type *start = MENU_initialize_my_menu();
-	MENU_start( start );
-	MENU_deallocate( start );
+    ECTMG_menu_t* start = ECTMG_initialize_my_menu();
+    ECTMG_start( start );
 	return 0;
 }
