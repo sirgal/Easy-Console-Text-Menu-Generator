@@ -9,6 +9,7 @@ exit_handler = "ECTMG_exitHandler"
 end_handler = "ECTMG_endHandler"
 handle_def = "ECTMG_handler"
 STRING_C_TYPE = "char*"
+STRING_DEFINE = "#define"
 
 ignore_escaped = "(?<!\\\)"
 
@@ -152,7 +153,8 @@ if __name__ == "__main__":
     for string_type, strings in static_strings:
         for i, string in enumerate(strings):
             string = string.replace("\n", "\\n") 
-            code += STRING_C_TYPE + " " + string_names(string_type, i) + " = \"" + string + "\";\n"
+            code += STRING_DEFINE + " " + string_names(string_type, i) + " \"" + string + "\"\n"
+            #code += STRING_C_TYPE + " " + string_names(string_type, i) + " = \"" + string + "\";\n"
 
         code += "\n"
 

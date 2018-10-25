@@ -4,18 +4,18 @@
 ECTMG_menu_t ECTMG_my_menu_instance[12];
 ECTMG_menu_entry_t ECTMG_my_menu_all_entries[17];
 
-char* ECTMG_my_menu_welcome_string_0 = "Hello! Welcome to my test menu.\n";
-char* ECTMG_my_menu_welcome_string_1 = "There shall be one submenu and one function call.\n";
-char* ECTMG_my_menu_welcome_string_2 = "You are going deeper and deeper.\n";
-char* ECTMG_my_menu_welcome_string_3 = "Here they are.\n{\n:\n[\n}\n";
-char* ECTMG_my_menu_welcome_string_4 = "Line 1.\nLine 2.\nLine 3.\n";
-char* ECTMG_my_menu_welcome_string_5 = "";
-char* ECTMG_my_menu_welcome_string_6 = "You're at 1st level.\n";
-char* ECTMG_my_menu_welcome_string_7 = "You're at 2nd level.\n";
-char* ECTMG_my_menu_welcome_string_8 = "You're at 3rd level.\n";
-char* ECTMG_my_menu_welcome_string_9 = "You're at 4th level.\n";
-char* ECTMG_my_menu_welcome_string_10 = "You're at 5th level.\n";
-char* ECTMG_my_menu_welcome_string_11 = "You are the winner. Go back now.\n";
+#define ECTMG_my_menu_welcome_string_0 "Hello! Welcome to my test menu.\n"
+#define ECTMG_my_menu_welcome_string_1 "There shall be one submenu and one function call.\n"
+#define ECTMG_my_menu_welcome_string_2 "You are going deeper and deeper.\n"
+#define ECTMG_my_menu_welcome_string_3 "Here they are.\n{\n:\n[\n}\n"
+#define ECTMG_my_menu_welcome_string_4 "Line 1.\nLine 2.\nLine 3.\n"
+#define ECTMG_my_menu_welcome_string_5 ""
+#define ECTMG_my_menu_welcome_string_6 "You're at 1st level.\n"
+#define ECTMG_my_menu_welcome_string_7 "You're at 2nd level.\n"
+#define ECTMG_my_menu_welcome_string_8 "You're at 3rd level.\n"
+#define ECTMG_my_menu_welcome_string_9 "You're at 4th level.\n"
+#define ECTMG_my_menu_welcome_string_10 "You're at 5th level.\n"
+#define ECTMG_my_menu_welcome_string_11 "You are the winner. Go back now.\n"
 
 char* ECTMG_my_menu_welcome_strings[] = {
     ECTMG_my_menu_welcome_string_0,
@@ -32,23 +32,23 @@ char* ECTMG_my_menu_welcome_strings[] = {
     ECTMG_my_menu_welcome_string_11
 };
 
-char* ECTMG_my_menu_entry_string_0 = "Call the first function \n";
-char* ECTMG_my_menu_entry_string_1 = "Go to the tests\n";
-char* ECTMG_my_menu_entry_string_2 = "Submenu\n";
-char* ECTMG_my_menu_entry_string_3 = "Escaped character test\n";
-char* ECTMG_my_menu_entry_string_4 = "Call the second function \n";
-char* ECTMG_my_menu_entry_string_5 = "Multi-line welcome text there\n";
-char* ECTMG_my_menu_entry_string_6 = "Call the third function \n";
-char* ECTMG_my_menu_entry_string_7 = "Call the fourth function \n";
-char* ECTMG_my_menu_entry_string_8 = "Third function, too \n";
-char* ECTMG_my_menu_entry_string_9 = "Empty menu with no description here\n";
-char* ECTMG_my_menu_entry_string_10 = "Call the function number 5 \n";
-char* ECTMG_my_menu_entry_string_11 = "Go to the depths\n";
-char* ECTMG_my_menu_entry_string_12 = "Go deeper\n";
-char* ECTMG_my_menu_entry_string_13 = "Go deeper\n";
-char* ECTMG_my_menu_entry_string_14 = "We have to go deeper\n";
-char* ECTMG_my_menu_entry_string_15 = "Go deeper\n";
-char* ECTMG_my_menu_entry_string_16 = "End of the tunnel\n";
+#define ECTMG_my_menu_entry_string_0 "Call the first function \n"
+#define ECTMG_my_menu_entry_string_1 "Go to the tests\n"
+#define ECTMG_my_menu_entry_string_2 "Submenu\n"
+#define ECTMG_my_menu_entry_string_3 "Escaped character test\n"
+#define ECTMG_my_menu_entry_string_4 "Call the second function \n"
+#define ECTMG_my_menu_entry_string_5 "Multi-line welcome text there\n"
+#define ECTMG_my_menu_entry_string_6 "Call the third function \n"
+#define ECTMG_my_menu_entry_string_7 "Call the fourth function \n"
+#define ECTMG_my_menu_entry_string_8 "Third function, too \n"
+#define ECTMG_my_menu_entry_string_9 "Empty menu with no description here\n"
+#define ECTMG_my_menu_entry_string_10 "Call the function number 5 \n"
+#define ECTMG_my_menu_entry_string_11 "Go to the depths\n"
+#define ECTMG_my_menu_entry_string_12 "Go deeper\n"
+#define ECTMG_my_menu_entry_string_13 "Go deeper\n"
+#define ECTMG_my_menu_entry_string_14 "We have to go deeper\n"
+#define ECTMG_my_menu_entry_string_15 "Go deeper\n"
+#define ECTMG_my_menu_entry_string_16 "End of the tunnel\n"
 
 char* ECTMG_my_menu_entry_strings[] = {
     ECTMG_my_menu_entry_string_0,
